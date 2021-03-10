@@ -10,119 +10,90 @@ int pressed = false;
 
 class Motor
 {
-  int en;
-  int in1;
-  int in2;
+    byte en;
+    byte in1;
+    byte in2;
 
 private:
-  int velocity(float value)
-  {
-    // Map the potentiometer value from 0 to 255 from percentaje o to 100
-    int pwmOutput = map(value, 0, 100, 0, 255);
-    return pwmOutput;
-  };
+    int velocity(float value)
+    {
+        // Map the potentiometer value from 0 to 255 from percentaje o to 100
+        int pwmOutput = map(value, 0, 100, 0, 255);
+        return pwmOutput;
+    };
 
 public:
-  Motor(int enable, int input1, int input2)
-  {
-    en = enable;
-    input1 = in1;
-    input2 = in2;
-    pinMode(enA, OUTPUT);
-    pinMode(in1, OUTPUT);
-    pinMode(in2, OUTPUT);
-    pinMode(button, INPUT);
-    // Set initial rotation direction
-    digitalWrite(in1, LOW);
-    digitalWrite(in2, HIGH);
-  };
+    Motor(int enable, int input1, int input2)
+    {
+        en = enable;
+        in1 = input1;
+        in2 = input2;
+        pinMode(enA, OUTPUT);
+        pinMode(in1, OUTPUT);
+        pinMode(in2, OUTPUT);
+        pinMode(button, INPUT);
+        // Set initial rotation direction
+        digitalWrite(in1, LOW);
+        digitalWrite(in2, LOW);
+    };
 
-  void forward(float vel, float t)
-  {
-    int pwm = velocity(vel);
-    analogWrite(en, pwm);
-    digitalWrite(in1, LOW);
-    digitalWrite(in2, HIGH);
-  };
+    void forward(float vel)
+    {
+        int pwm = velocity(vel);
+        analogWrite(en, pwm);
+        digitalWrite(in1, LOW);
+        digitalWrite(in2, HIGH);
+    };
 
-  void backward(float vel)
-  {
-    int pwm = velocity(vel);
-    analogWrite(en, pwm);
-    digitalWrite(in1, HIGH);
-    digitalWrite(in2, LOW);
-  };
+    void backward(float vel)
+    {
+        int pwm = velocity(vel);
+        analogWrite(en, pwm);
+        digitalWrite(in1, HIGH);
+        digitalWrite(in2, LOW);
+    };
 
-  void stopMotor()
-  {
-    analogWrite(en, LOW);
-    digitalWrite(in1, LOW);
-    digitalWrite(in2, LOW);
-  };
+    void stop()
+    {
+        analogWrite(en, LOW);
+        digitalWrite(in1, LOW);
+        digitalWrite(in2, LOW);
+    };
 
-  void time(float t)
-  {
-    delay(t);
-  };
+    void time(float t)
+    {
+        delay(t);
+    };
 };
 
 void setup()
 {
-  //I2C COmunication
-  // initialize serial:
-  Serial.begin(9600);
-
-  pinMode(enA, OUTPUT);
-  pinMode(inA1, OUTPUT);
-  pinMode(inA2, OUTPUT);
-  // pinMode(button, INPUT);
-  // Set initial rotation direction
-  digitalWrite(inA1, LOW);
-  digitalWrite(inA2, LOW);
+    //I2C COmunication
+    // initialize serial:
+    Serial.begin(9600);
 }
+
+Motor motor_l = Motor(enA, inA1, inA2);
 
 void loop()
 {
-  // Read potentiometer value
-  // int potValue = analogRead(A0);
-  // Map the potentiometer value from 0 to 255
-  // int pwmOutput = map(potValue, 0, 1023, 0, 255);
-  // Send PWM signal to L298N Enable pin
-  analogWrite(enA, 255);
 
-  // Read button - Debounce
-  // if (digitalRead(button) == true)
-  // {
-  //   pressed = !pressed;
-  // }
-  // while (digitalRead(button) == true)
-  //   ;
-  // delay(20);
+    motor_l.time(900);
 
-  // If button is pressed - change rotation direction
-  // if (pressed == true & rotDirection == 0)
-  // {
-  digitalWrite(inA1, HIGH);
-  digitalWrite(inA2, LOW);
-  delay(20);
-  // }
-  // If button is pressed - change rotation direction
-  // if (pressed == false & rotDirection == 1)
-  // {
-  //   digitalWrite(in1, LOW);
-  //   digitalWrite(in2, HIGH);
-  //   rotDirection = 0;
-  //   delay(20);
-  // }
+    motor_l.stop();
+    motor_l.time(900);
 
-  // I2C Comunication
-  if (count % 10 == 0)
-  {
-    Serial.println("Hello, Serial communication works");
-  }
-  else
-  {
-    Serial.println(count);
-  }
-  count++;
+    motor_l.backward(100);
+    motor_l.time(900);
+
+    // I2C Comunication
+    // if (count % 10 == 0)
+    // {
+    //     Serial.println("Hello, Serial communication works");
+    // }
+    // else
+    // {
+    //     Serial.println(count);
+    // }
+    // count++;
 }
