@@ -1,6 +1,5 @@
 /*  Arduino DC Motor Control - PWM | H-Bridge | L298N */
-
-#include "motor.h"
+#include "motor.hpp"
 
 // left motor
 #define enA 9
@@ -9,8 +8,8 @@
 
 // right motor
 #define enB 10
-#define inB1 11
-#define inB2 12
+#define inB1 12
+#define inB2 11
 
 Motor motor_l = Motor(enA, inA1, inA2);
 Motor motor_r = Motor(enB, inB1, inB2);
