@@ -64,6 +64,11 @@ if DIPLAY_IP:
     # draw.text((x, top), "eth0: " +str(utils.get_ip_address('eth0')),  font=font, fill=255)
     draw.text((x, top+8), "wlan0: " +
               str(utils.get_ip_address('wlan0')), font=font, fill=255)
+    # Display image.
+    # Set the SSD1306 image to the PIL image we have made
+    display.image(image)
+    # Display image in screen
+    display.show()
 else:
 
     while True:
