@@ -61,7 +61,8 @@ font = ImageFont.load_default()
 if DIPLAY_IP:
     # Print the IP address
     # Two examples here, wired and wireless
-    # draw.text((x, top), "eth0: " +str(utils.get_ip_address('eth0')),  font=font, fill=255)
+    draw.text((x, top), "eth0: " +
+              str(utils.get_ip_address('eth0')),  font=font, fill=255)
     draw.text((x, top+8), "wlan0: " +
               str(utils.get_ip_address('wlan0')), font=font, fill=255)
     # Display image.
