@@ -62,12 +62,13 @@ if DIPLAY_IP:
     # Print the IP address
     # Two examples here, wired and wireless
     eth_address = str(utils.get_ip_address('eth0'))
-    if eth_address:
+    if eth_address != 'None':
         draw.text((x, top), "eth0: " + eth_address,  font=font, fill=255)
         top += 8
     wlan_address = str(utils.get_ip_address('wlan0'))
-    if wlan_address:
-        draw.text((x, top+8), "wlan0: " + wlan_address, font=font, fill=255)
+    if wlan_address != 'None':
+        draw.text((x, top), "wlan0: " + wlan_address, font=font, fill=255)
+        top += 8
     # Display image.
     # Set the SSD1306 image to the PIL image we have made
     display.image(image)
