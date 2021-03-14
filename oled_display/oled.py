@@ -61,10 +61,13 @@ font = ImageFont.load_default()
 if DIPLAY_IP:
     # Print the IP address
     # Two examples here, wired and wireless
-    draw.text((x, top), "eth0: " +
-              str(utils.get_ip_address('eth0')),  font=font, fill=255)
-    draw.text((x, top+8), "wlan0: " +
-              str(utils.get_ip_address('wlan0')), font=font, fill=255)
+    eth_address = str(utils.get_ip_address('eth0'))
+    if eth_address:
+        draw.text((x, top), "eth0: " + eth_address,  font=font, fill=255)
+        top += 8
+    wlan_address = str(utils.get_ip_address('wlan0'))
+    if wlan_address:
+        draw.text((x, top+8), "wlan0: " + wlan_address, font=font, fill=255)
     # Display image.
     # Set the SSD1306 image to the PIL image we have made
     display.image(image)
