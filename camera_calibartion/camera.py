@@ -67,16 +67,23 @@ class Camera:
         # Destroy all windows
         cv2.destroyAllWindows()
 
-    def captureImage(self, num_img: int = 1, fps: int = 1) -> None:
-        webcam = cv2.VideoCapture(0)
+    def captureImage(self, cam: int = 0, num_img: int = 1, fps: int = 1) -> None:
+        webcam = cv2.VideoCapture(cam)
         # number of photos to take
         cv2.waitKey(3000)
         for i in range(num_img):
             try:
                 ret, frame = webcam.read()
+                if not ret:
+                    print('Could not get feed')
+                    sys.exit(1)
+
                 cv2.imshow("Captured Image", frame)
+                print('hi')
                 if self._save:
+                    print(self._file_path)
                     path = ''.join([self._file_path, '_', str(i), '.jpg'])
+                    print(path)
                     cv2.imwrite(filename=path, img=frame)
                 # see image for 2 seconds
                 cv2.waitKey(int(fps * 1000))
