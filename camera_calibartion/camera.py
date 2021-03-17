@@ -26,7 +26,7 @@ class Camera:
     def check_webcam_avalability(self, webcam: cv2.VideoCapture) -> None:
         if not webcam.isOpened():
             print("Error opening webcam")
-            sys.exit()
+            sys.exit(1)
 
     @property
     def check_Q(self) -> bool:
@@ -67,8 +67,10 @@ class Camera:
         # Destroy all windows
         cv2.destroyAllWindows()
 
-    def captureImage(self, cam: int = 0, num_img: int = 1, fps: int = 1) -> None:
-        webcam = cv2.VideoCapture(cam)
+    def captureImage(self, cam, num_img: int = 1, fps: int = 1) -> None:
+        webcam = cv2.VideoCapture('nvarguscamerasrc ! video/x-raw(memory:NVMM), width=3280, height=2464, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv ! video/x-raw, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink', cv2.CAP_GSTREAMER)
+
+        self.check_webcam_avalability(webcam)
         # number of photos to take
         cv2.waitKey(3000)
         for i in range(num_img):
@@ -78,15 +80,14 @@ class Camera:
                     print('Could not get feed')
                     sys.exit(1)
 
-                cv2.imshow("Captured Image", frame)
-                print('hi')
+                # cv2.imshow("Captured Image", frame)
                 if self._save:
-                    print(self._file_path)
+                    print('Saving image...')
                     path = ''.join([self._file_path, '_', str(i), '.jpg'])
                     print(path)
                     cv2.imwrite(filename=path, img=frame)
                 # see image for 2 seconds
-                cv2.waitKey(int(fps * 1000))
+                # cv2.waitKey(int(fps * 1000))
                 if self.check_Q:
                     break
             except KeyboardInterrupt:
