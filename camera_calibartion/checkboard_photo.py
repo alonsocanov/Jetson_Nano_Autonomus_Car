@@ -9,7 +9,7 @@ def main():
     data = json.load(json_file)
     left_camera = data['waveshare_camera']['left']
     api_enum = data['waveshare_camera']['apiEnum']
-    camera.captureImage(left_camera, api_enum, num_img=3)
+    camera.captureImage(left_camera, api_enum, num_img=1)
 
 
 if __name__ == '__main__':
