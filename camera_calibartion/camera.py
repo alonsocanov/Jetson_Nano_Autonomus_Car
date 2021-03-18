@@ -67,8 +67,12 @@ class Camera:
         # Destroy all windows
         cv2.destroyAllWindows()
 
-    def captureImage(self, cam, num_img: int = 1, fps: int = 1) -> None:
-        webcam = cv2.VideoCapture('nvarguscamerasrc ! video/x-raw(memory:NVMM), width=3280, height=2464, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv ! video/x-raw, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink', cv2.CAP_GSTREAMER)
+    def captureImage(self, pipeline, api = None, num_img: int = 1, fps: int = 1) -> None:
+        # webcam = cv2.VideoCapture('nvarguscamerasrc ! video/x-raw(memory:NVMM), width=3280, height=2464, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv ! video/x-raw, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink', cv2.CAP_GSTREAMER)
+        if not api:
+            webcam = cv2.VideoCapture(pipeline)
+        else:
+            webcam = cv2.VideoCapture(pipeline, api)
 
         self.check_webcam_avalability(webcam)
         # number of photos to take

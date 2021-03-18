@@ -1,11 +1,15 @@
 from camera import Camera
+import json
 
 
 def main():
 
     camera = Camera(True, 'data/left', 'img')
-    GSTREAMER_PIPELINE = 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=1920, height=1080, format=(string)NV12, framerate=21/1 ! nvvidconv flip-method=0 ! video/x-raw, width=960, height=616, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink'
-    camera.captureImage(0, 1)
+    json_file = open('../config/config.json')
+    data = json.load(json_file)
+    left_camera = data['waveshare_camera']['left']
+    api_enum = data['waveshare_camera']['apiEnum']
+    camera.captureImage(left_camera, api_enum, num_img=3)
 
 
 if __name__ == '__main__':

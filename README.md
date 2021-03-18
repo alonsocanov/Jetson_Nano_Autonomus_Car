@@ -8,6 +8,7 @@ This project aims to make a driveless jetson Nano car
 - Camera
 - Arduino Uno
 - MakerFocus I2C OLED Display module 0.91 inch I2C SSD1306
+- Waveshare IMX219-83 Stereo Camera
 
 ## Libraries
 
@@ -17,6 +18,10 @@ Oled display:
 - board
 - busio
 - Pillow
+
+## Waveshare IMX219-83 Stereo Camera
+
+The documentation for the [Waveshare IMX219-83 Stereo Camera](https://www.waveshare.com/wiki/IMX219-83_Stereo_Camera)
 
 ## Jetson Nano connection to MakerFocus I2C OLED Display
 
