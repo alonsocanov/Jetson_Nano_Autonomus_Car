@@ -22,7 +22,7 @@ import subprocess
 # Import the SSD1306 module.
 import adafruit_ssd1306
 # library for needed functions
-import utils
+from oled_display.utils import get_ip_address, get_gpu_usage
 
 DIPLAY_IP = True
 
@@ -61,11 +61,11 @@ font = ImageFont.load_default()
 if DIPLAY_IP:
     # Print the IP address
     # Two examples here, wired and wireless
-    eth_address = str(utils.get_ip_address('eth0'))
+    eth_address = str(get_ip_address('eth0'))
     if eth_address != 'None':
         draw.text((x, top), "eth0: " + eth_address,  font=font, fill=255)
         top += 8
-    wlan_address = str(utils.get_ip_address('wlan0'))
+    wlan_address = str(get_ip_address('wlan0'))
     if wlan_address != 'None':
         draw.text((x, top), "wlan0: " + wlan_address, font=font, fill=255)
         top += 8
@@ -89,9 +89,9 @@ else:
 
         # Print the IP address
         # Two examples here, wired and wireless
-        # draw.text((x, top), "eth0: " +str(utils.get_ip_address('eth0')),  font=font, fill=255)
+        # draw.text((x, top), "eth0: " +str(get_ip_address('eth0')),  font=font, fill=255)
         draw.text((x, top+8), "wlan0: " +
-                  str(utils.get_ip_address('wlan0')), font=font, fill=255)
+                  str(get_ip_address('wlan0')), font=font, fill=255)
 
         # Alternate solution: Draw the GPU usage as text
         # draw.text((x, top+8),     "GPU:  " +"{:3.1f}".format(GPU)+" %", font=font, fill=255)
@@ -99,7 +99,7 @@ else:
         string_width, string_height = font.getsize("GPU:  ")
         # Figure out the width of the bar
         full_bar_width = WIDTH-(x+string_width)-1
-        gpu_usage = utils.get_gpu_usage()
+        gpu_usage = get_gpu_usage()
         # Avoid divide by zero ...
         if gpu_usage == 0.0:
             gpu_usage = 0.001
