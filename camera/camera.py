@@ -13,15 +13,12 @@ class Camera:
         self._save_path = save_path
         self._cur_dir = os.path.abspath(os.path.dirname(__file__))
         if save_path:
-            path = [self._cur_dir, self._save_path, self._file_name]
+            path = [self._save_path, self._file_name]
             self._file_path = '/'.join(path)
-            path = [self._cur_dir, self._save_path]
-            self._dir_path = '/'.join(path)
+            self._dir_path = save_path
         else:
-            path = [self._cur_dir, self._file_name]
-            self._file_path = '/'.join(path)
-            path = [self._cur_dir]
-            self._dir_path = '/'.join(path)
+            self._file_path = self._file_name
+            self._dir_path = self._cur_dir
 
     def check_webcam_avalability(self, webcam: cv2.VideoCapture) -> None:
         if not webcam.isOpened():
