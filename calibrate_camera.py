@@ -41,7 +41,10 @@ def main():
         camera.captureImage(left_camera, api_enum, num_img=args.num_images)
 
     if args.calibrate == 'left':
-        left_img = Calibrate(True, path_cam_l)
+        left_img = Calibrate(True, path_cam_l, path_cam_l)
+        left_img.calibrate(fish_eye=False, num_rows=9, num_cols=6, dimension=30)
+    if args.calibrate == 'right':
+        left_img = Calibrate(True, path_cam_r, path_cam_r)
         left_img.calibrate(fish_eye=False, num_rows=9, num_cols=6, dimension=30)
 
 
