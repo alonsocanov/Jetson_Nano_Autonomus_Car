@@ -3,7 +3,7 @@ import cv2
 import sys
 import glob
 import numpy as np
-from camera import Camera
+# from camera import Camera
 
 
 class Calibrate:
@@ -12,16 +12,13 @@ class Calibrate:
         self._file_name = file_name
         self._path = path
         self._cur_dir = os.path.abspath(os.path.dirname(__file__))
-        if path:
-            path = [self._cur_dir, self._path, self._file_name]
+        if save_path:
+            path = [self._save_path, self._file_name]
             self._file_path = '/'.join(path)
-            path = [self._cur_dir, self._path]
-            self._dir_path = '/'.join(path)
+            self._dir_path = save_path
         else:
-            path = [self._cur_dir, self._file_name]
-            self._file_path = '/'.join(path)
-            path = [self._cur_dir]
-            self._dir_path = '/'.join(path)
+            self._file_path = self._file_name
+            self._dir_path = self._cur_dir
 
         self._mtx_file = 'camera_matrix.txt'
         self._new_mtx_file = 'new_camera_matrix.txt'

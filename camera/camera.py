@@ -71,24 +71,29 @@ class Camera:
         else:
             webcam = cv2.VideoCapture(pipeline, api)
 
+
         self.check_webcam_avalability(webcam)
         # number of photos to take
-        cv2.waitKey(3000)
-        for i in range(num_img):
+        i = 1
+        while i <= num_img:
             try:
                 ret, frame = webcam.read()
                 if not ret:
                     print('Could not get feed')
                     sys.exit(1)
+                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
                 # cv2.imshow("Captured Image", frame)
                 if self._save:
-                    print('Saving image...')
                     path = ''.join([self._file_path, '_', str(i), '.jpg'])
-                    print(path)
                     cv2.imwrite(filename=path, img=frame)
+                    print(path)
                 # see image for 2 seconds
-                # cv2.waitKey(int(fps * 1000))
+                cv2.waitKey(int(fps * 1000))
+                i += 1
+                if np.mean(gray) < 90:
+                    print('Image too dark')
+                    i -= 1
                 if self.check_Q:
                     break
             except KeyboardInterrupt:
