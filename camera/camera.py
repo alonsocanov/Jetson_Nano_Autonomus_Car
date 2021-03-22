@@ -6,32 +6,28 @@ import numpy as np
 
 
 class Camera:
-    def __init__(self, save: bool = False, save_path: str = '', file_name: str = '') -> None:
+    def __init__(self, pipeline = 0, api = None) -> None:
 
-        self._save = save
-        self._file_name = file_name
-        self._save_path = save_path
-        self._cur_dir = os.path.abspath(os.path.dirname(__file__))
-        if save_path:
-            path = [self._save_path, self._file_name]
-            self._file_path = '/'.join(path)
-            self._dir_path = save_path
-        else:
-            self._file_path = self._file_name
-            self._dir_path = self._cur_dir
+        self.pipeline = pipeline
+        self.api = api
+
+
+    def save_img(image, path):
+        cv2.imwrite(filename=path, img=frame)
+
 
     def check_webcam_avalability(self, webcam: cv2.VideoCapture) -> None:
         if not webcam.isOpened():
             print("Error opening webcam")
+            webcam.release()
             sys.exit(1)
 
-    @property
-    def check_Q(self) -> bool:
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+    def check(self, char:str='q') -> bool:
+        if cv2.waitKey(1) & 0xFF == ord(char):
             return True
         return False
 
-    def captureVideo(self, fps) -> None:
+    def capture_video(self, fps) -> None:
         webcam = cv2.VideoCapture(0)
         width = int(webcam.get(3))
         height = int(webcam.get(4))
@@ -50,7 +46,7 @@ class Camera:
                     cv2.imshow('Frame', frame)
                     if self._save:
                         out.write(frame)
-                    if self.check_Q:
+                    if self.check:
                         break
                 else:
                     break
@@ -64,16 +60,13 @@ class Camera:
         # Destroy all windows
         cv2.destroyAllWindows()
 
-    def captureImage(self, pipeline, api = None, num_img: int = 1, fps: int = 1) -> None:
-        # webcam = cv2.VideoCapture('nvarguscamerasrc ! video/x-raw(memory:NVMM), width=3280, height=2464, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv ! video/x-raw, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink', cv2.CAP_GSTREAMER)
-        if not api:
-            webcam = cv2.VideoCapture(pipeline)
+    def capture_image(self, num_img: int = 1, fps: int = 1, save_dir: str = '', img_name: str = '', file_type: str = '.jpg') -> None:
+        if not self.api:
+            webcam = cv2.VideoCapture(self.pipeline)
         else:
-            webcam = cv2.VideoCapture(pipeline, api)
-
-
+            webcam = cv2.VideoCapture(self.pipeline, self.api)
         self.check_webcam_avalability(webcam)
-        # number of photos to take
+        # photo counter
         i = 1
         while i <= num_img:
             try:
@@ -83,18 +76,19 @@ class Camera:
                     sys.exit(1)
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-                # cv2.imshow("Captured Image", frame)
-                if self._save:
-                    path = ''.join([self._file_path, '_', str(i), '.jpg'])
-                    cv2.imwrite(filename=path, img=frame)
-                    print(path)
-                # see image for 2 seconds
-                cv2.waitKey(int(fps * 1000))
-                i += 1
                 if np.mean(gray) < 90:
-                    print('Image too dark')
-                    i -= 1
-                if self.check_Q:
+                    print('The image too dark, it will not be saved')
+
+                elif save_dir and img_name:
+                    img_name = ''.join([img_name, '_', str(i), file_type])
+                    path = '/'.join([save_dir, img_name])
+                    cv2.imwrite(filename=path, img=frame)
+                    i += 1
+                    print(path)
+                # see image for fps * seconds
+                cv2.waitKey(int(fps * 1000))
+
+                if self.check:
                     break
             except KeyboardInterrupt:
                 print("Interrupted")
