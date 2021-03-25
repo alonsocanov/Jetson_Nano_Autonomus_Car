@@ -8,6 +8,7 @@ import time
 
 class Camera:
     def __init__(self, pipeline=0, api=None, scale: float = 1.0) -> None:
+        print('hi')
 
         self.pipeline = pipeline
         self.api = api
