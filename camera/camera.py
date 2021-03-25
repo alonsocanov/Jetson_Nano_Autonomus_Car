@@ -3,18 +3,15 @@ import cv2
 import sys
 import glob
 import numpy as np
+import time
 
 
 class Camera:
-    def __init__(self, pipeline = 0, api = None) -> None:
+    def __init__(self, pipeline=0, api=None, scale: float = 1.0) -> None:
 
         self.pipeline = pipeline
         self.api = api
-
-
-    def save_img(image, path):
-        cv2.imwrite(filename=path, img=frame)
-
+        self.scale = scale
 
     def check_webcam_avalability(self, webcam: cv2.VideoCapture) -> None:
         if not webcam.isOpened():
@@ -22,73 +19,82 @@ class Camera:
             webcam.release()
             sys.exit(1)
 
-    def check(self, char:str='q') -> bool:
+    def check(self, char: str = 'q') -> bool:
         if cv2.waitKey(1) & 0xFF == ord(char):
             return True
         return False
 
-    def capture_video(self, fps) -> None:
-        webcam = cv2.VideoCapture(0)
-        width = int(webcam.get(3))
-        height = int(webcam.get(4))
+    def set_scale(self, scale: float = 1.0):
+        self.scale = scale
 
+    def resize_dim(self, dim: tuple):
+        if not isinstance(dim, tuple) or len(dim) != 2:
+            print('Dimension must be a tuple and of lenght 2')
+            sys.exit(1)
+        return (int(dim[0] * self.scale), int(dim[1] * self.scale))
+
+    def captureVideo(self, fps, save_dir: str = '', video_name: str = 'video', show_frame: bool = False, time: float = None) -> None:
+        if not self.api:
+            webcam = cv2.VideoCapture(self.pipeline)
+        else:
+            webcam = cv2.VideoCapture(self.pipeline, self.api)
         self.check_webcam_avalability(webcam)
-        if self._save:
+
+        width, height = self.resize_dim(
+            (int(webcam.get(3)), int(webcam.get(4))))
+
+        if save_dir:
             fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-            save_path = ''.join([self._file_path, '.avi'])
-            out = cv2.VideoWriter(save_path, fourcc, fps, (width, height))
+            vid_name = ''.join([video_name, '.avi'])
+            path = '/'.join([save_dir, vid_name])
+            out = cv2.VideoWriter(path, fourcc, fps, (width, height))
         while True:
             try:
                 # capture each frame
                 ret, frame = webcam.read()
-                if ret:
-                    # display frame
+                if not ret:
+                    print('Could not get frame')
+                    sys.exit(1)
+                frame = cv2.resize(frame, (width, height))
+                # display frame
+                if show_frame:
                     cv2.imshow('Frame', frame)
-                    if self._save:
-                        out.write(frame)
-                    if self.check:
-                        break
-                else:
+                if save_dir:
+                    out.write(frame)
+                if self.check():
                     break
             except KeyboardInterrupt:
                 print('Interrupted')
                 break
         # After the loop release the video and out object
         webcam.release()
-        if self._save:
+        if save_dir:
             out.release()
         # Destroy all windows
         cv2.destroyAllWindows()
 
-    def capture_image(self, num_img: int = 1, fps: int = 1, save_dir: str = '', img_name: str = '', file_type: str = '.jpg') -> None:
+    def captureImage(self, num_img: int = 1, fps: int = 1, save_dir='', img_name='img', file_type='.jpg', show_img=False) -> None:
         if not self.api:
             webcam = cv2.VideoCapture(self.pipeline)
         else:
             webcam = cv2.VideoCapture(self.pipeline, self.api)
         self.check_webcam_avalability(webcam)
-        # photo counter
-        i = 1
-        while i <= num_img:
+        if show_img:
+            time.sleep(fps)
+        for i in range(num_img):
             try:
                 ret, frame = webcam.read()
                 if not ret:
-                    print('Could not get feed')
+                    print('Unable to get image')
                     sys.exit(1)
-                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-                if np.mean(gray) < 90:
-                    print('The image too dark, it will not be saved')
-
-                elif save_dir and img_name:
-                    img_name = ''.join([img_name, '_', str(i), file_type])
-                    path = '/'.join([save_dir, img_name])
+                if save_dir:
+                    image_name = ''.join([img_name, '_', str(i), file_type])
+                    path = '/'.join([save_dir, image_name])
                     cv2.imwrite(filename=path, img=frame)
-                    i += 1
-                    print(path)
-                # see image for fps * seconds
-                cv2.waitKey(int(fps * 1000))
-
-                if self.check:
+                if show_img:
+                    cv2.imshow("Captured Image", frame)
+                    cv2.waitKey(int(fps * 1000))
+                if self.check():
                     break
             except KeyboardInterrupt:
                 print("Interrupted")
