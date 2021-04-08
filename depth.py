@@ -1,4 +1,5 @@
-import stereo.stereo as stereo
+import camera.stereo as stereo
+import camera.calibrate as calibrate
 import files_management
 from matplotlib import pyplot as plt
 from matplotlib import patches

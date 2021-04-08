@@ -23,39 +23,6 @@ def checkDevice(source, api=None):
 def check_webcam_avalability(webcam: cv2.VideoCapture) -> None:
     if not webcam.isOpened():
         webcam.release()
-<<<<<<< HEAD
-        if self._save:
-            out.release()
-        # Destroy all windows
-        cv2.destroyAllWindows()
-
-    def captureImage(self, pipeline, api=None, num_img: int = 1, fps: int = 1) -> None:
-        # webcam = cv2.VideoCapture('nvarguscamerasrc ! video/x-raw(memory:NVMM), width=3280, height=2464, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv ! video/x-raw, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink', cv2.CAP_GSTREAMER)
-        if not api:
-            webcam = cv2.VideoCapture(pipeline)
-        else:
-            webcam = cv2.VideoCapture(pipeline, api)
-
-        self.check_webcam_avalability(webcam)
-        # number of photos to take
-        cv2.waitKey(3000)
-        for i in range(num_img):
-            try:
-                ret, frame = webcam.read()
-                if not ret:
-                    print('Could not get feed')
-                    sys.exit(1)
-
-                # cv2.imshow("Captured Image", frame)
-                if self._save:
-                    print('Saving image...')
-                    path = ''.join([self._file_path, '_', str(i), '.jpg'])
-                    print(path)
-                    cv2.imwrite(filename=path, img=frame)
-                # see image for 2 seconds
-                cv2.waitKey(int(fps * 1000))
-                if self.check_Q:
-=======
         sys_exit(message)
 
 
