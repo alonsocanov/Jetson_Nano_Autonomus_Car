@@ -8,14 +8,15 @@
 
 // right motor
 #define enB 10
-#define inB1 12
-#define inB2 11
+#define inB1 11
+#define inB2 12
 
 Motor motor_l = Motor(enA, inA1, inA2);
 Motor motor_r = Motor(enB, inB1, inB2);
 
 void setup()
 {
+
     //I2C COmunication
     // initialize serial:
     Serial.begin(9600);
