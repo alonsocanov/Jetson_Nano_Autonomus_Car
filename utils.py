@@ -1,6 +1,7 @@
 import os
 import sys
 import glob
+import json
 
 
 def sys_exit(message: str):
@@ -72,3 +73,10 @@ def files_in_dir(dir_path: str, ext: str = None):
 def join_path(*args):
     array = list(args)
     return '/'.join(array)
+
+
+def read_json(path):
+    check_file(path)
+    with open(path) as f:
+        data = json.load(f)
+    return data

@@ -85,7 +85,6 @@ def captureVideo(pipeline, api=None, fps=24, path: str = '', show_frame: bool = 
                 break
             if vid_lenght:
                 if time.time() - t >= vid_lenght:
->>>>>>> camera_calibration
                     break
 
         except KeyboardInterrupt:

@@ -1,6 +1,8 @@
 import numpy as np
 import cv2
 
+# Use regular numpy notation instead of scientific one
+np.set_printoptions(suppress=True)
 
 def compute_left_disparity_map(img_left, img_right):
     # Parameters
@@ -84,36 +86,3 @@ def calculate_nearest_point(depth_map, obstacle_location, obstacle_img):
                                       linewidth=1, edgecolor='r', facecolor='none')
 
     return closest_point_depth, obstacle_bbox
-
-
-# Part 1. Read Input Data
-img_left = files_management.read_left_image()
-img_right = files_management.read_right_image()
-p_left, p_right = files_management.get_projection_matrices()
-
-
-# Part 2. Estimating Depth
-disp_left = compute_left_disparity_map(img_left, img_right)
-k_left, r_left, t_left = decompose_projection_matrix(p_left)
-k_right, r_right, t_right = decompose_projection_matrix(p_right)
-depth_map_left = calc_depth_map(disp_left, k_left, t_left, t_right)
-
-
-# Part 3. Finding the distance to collision
-obstacle_image = files_management.get_obstacle_image()
-cross_corr_map, obstacle_location = locate_obstacle_in_image(
-    img_left, obstacle_image)
-closest_point_depth, obstacle_bbox = calculate_nearest_point(
-    depth_map_left, obstacle_location, obstacle_image)
-
-
-# Print Result Output
-print("Left Projection Matrix Decomposition:\n {0}".format([k_left.tolist(),
-                                                            r_left.tolist(),
-                                                            t_left.tolist()]))
-print("\nRight Projection Matrix Decomposition:\n {0}".format([k_right.tolist(),
-                                                               r_right.tolist(),
-                                                               t_right.tolist()]))
-print(
-    "\nObstacle Location (left-top corner coordinates):\n {0}".format(list(obstacle_location)))
-print("\nClosest point depth (meters):\n {0}".format(closest_point_depth))
