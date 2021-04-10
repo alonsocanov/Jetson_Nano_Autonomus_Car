@@ -40,26 +40,11 @@ def main():
     timeout = 3
     arduino = Communication(port)
     data = "10,20,30,40"
-    idx = 0
     arduino.send(data)
     while not arduino.buffer:
         arduino.receive()
         if arduino.buffer:
             print(arduino.buffer)
 
-        # # Convert the decimal number to ASCII then send it to the Arduino
-        # ser.write(str.encode(data))
-        # # Delay for one tenth of a second
-        # time.sleep(.1)
-        idx += 1
-        # if idx == 100:
-        #     arduino.send_data(data)
-        #     time.sleep(.5)
-        #     arduino.receive_data()
-        #     # print(arduino.buffer)
-        #     time.sleep(.5)
 
-
-    # Read the newest output from the Arduino
-    # print(ser.readline().decode('utf-8'))
 main()
