@@ -53,8 +53,4 @@ void loop()
         motor_l.stop();
         motor_r.stop();
     }
-
-    // motor_l.backward(100);
-    // motor_r.backward(100);
-    // delay(900);
 }

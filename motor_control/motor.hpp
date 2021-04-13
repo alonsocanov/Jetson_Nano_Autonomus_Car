@@ -1,4 +1,5 @@
-
+// #ifndef MOTOR_HPP
+// #define MOTOR_HPP
 
 class Motor
 {
@@ -7,10 +8,19 @@ class Motor
     byte in2;
 
 private:
-    int velocity(float value)
+    int velocity(float value, float lim_max = 100, float lim_min = -100)
     {
+        if (value > lim_max)
+        {
+            value = lim_max;
+        }
+        else if (value < lim_min)
+        {
+            value = lim_min;
+        }
+
         // Map the potentiometer value from 0 to 255 from percentaje o to 100
-        int pwmOutput = map(abs(value), 0, 1, 0, 255);
+        int pwmOutput = map(abs(value), 0, 100, 0, 255);
         return pwmOutput;
     };
 
@@ -58,3 +68,5 @@ public:
         digitalWrite(in2, LOW);
     };
 };
+
+// #endif

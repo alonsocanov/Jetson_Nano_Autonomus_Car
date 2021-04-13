@@ -68,7 +68,6 @@ def captureVideo(pipeline, api=None, fps=24, path: str = '', show_frame: bool = 
     if vid_lenght:
         t = time.time()
     while True:
-
         try:
             # capture each frame
             ret, frame = webcam.read()
@@ -166,4 +165,77 @@ def stereoCapture(pipeline, api=None, num_img: int = 1, fps: int = 1, save_dir='
             break
     webcam_1.release()
     webcam_2.release()
+    cv2.destroyAllWindows()
+
+
+def colorDetection(pipeline, api=None, show_img: bool = True):
+    video = cv2.VideoCapture(file)
+    check_webcam_avalability(webcam)
+
+    width, height = scale((int(webcam.get(3)), int(webcam.get(4))))
+    w, h = scale((width, height), 0.5)
+
+    win_name = 'Frame'
+    cv2.namedWindow(win_name)
+    cv2.moveWindow(win_name, 20, 20)
+
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    fontScale = .5
+    fontColor = (255, 255, 255)
+    lineType = 2
+
+    # lower and upper range of hsv color
+    hsv_lower = hsv2cvhsv(np.array([45, 40, 20]))
+    hsv_upper = hsv2cvhsv(np.array([65, 100, 100]))
+
+    print('Press Q to quit')
+
+    while video.isOpened():
+        ret, frame = video.read()
+        if check_key():
+            break
+
+        frame = resize(frame, (w, h))
+        blur = cv2.GaussianBlur(frame, (7, 7), 0)
+        hsv = cv2.cvtColor(blur, cv2.COLOR_BGR2HSV)
+        mask = cv2.inRange(hsv, hsv_lower, hsv_upper)
+        mask = cv2.erode(mask, None, iterations=2)
+
+        cnts = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+                                cv2.CHAIN_APPROX_SIMPLE)
+        cnts = imutils.grab_contours(cnts)
+        if len(cnts) > 0:
+            try:
+                c = max(cnts, key=cv2.contourArea)
+                ((x, y), r) = cv2.minEnclosingCircle(c)
+                M = cv2.moments(c)
+                try:
+                    cx = int(M["m10"] / M["m00"])
+                except ZeroDivisionError:
+                    cx = w
+                try:
+                    cy = int(M["m01"] / M["m00"])
+                except ZeroDivisionError:
+                    cy = h
+                center = (cx, cy)
+                if r > 10:
+                    cv2.circle(frame, (int(x), int(y)), int(r), (0, 255, 0), 4)
+                    cv2.circle(frame, center, 1, (0, 0, 255), 5)
+                    cv2.putText(frame, 'z', (int(x) + 10, int(y) + 10),
+                                font, fontScale, fontColor, lineType)
+
+                    # follow trail when using webcam
+                    pts.insert(0, center)
+                    if len(pts) > 100:
+                        pts.pop()
+                    drawTrace(frame, pts)
+
+            except:
+                pass
+        # save video feed
+        # out.write(frame)
+        img = frame
+        cv2.imshow(win_name, img)
+
+    video.release()
     cv2.destroyAllWindows()
