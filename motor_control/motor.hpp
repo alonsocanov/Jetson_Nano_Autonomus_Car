@@ -1,3 +1,5 @@
+
+
 class Motor
 {
     byte en;
@@ -8,7 +10,7 @@ private:
     int velocity(float value)
     {
         // Map the potentiometer value from 0 to 255 from percentaje o to 100
-        int pwmOutput = map(value, 0, 100, 0, 255);
+        int pwmOutput = map(abs(value), 0, 1, 0, 255);
         return pwmOutput;
     };
 
@@ -26,21 +28,28 @@ public:
         digitalWrite(in2, LOW);
     };
 
-    void forward(float vel)
+    void move(float vel)
     {
         int pwm = velocity(vel);
         analogWrite(en, pwm);
-        digitalWrite(in1, LOW);
-        digitalWrite(in2, HIGH);
+        if (vel < 0)
+        {
+            digitalWrite(in1, HIGH);
+            digitalWrite(in2, LOW);
+        }
+        else
+        {
+            digitalWrite(in1, LOW);
+            digitalWrite(in2, HIGH);
+        }
     };
 
-    void backward(float vel)
-    {
-        int pwm = velocity(vel);
-        analogWrite(en, pwm);
-        digitalWrite(in1, HIGH);
-        digitalWrite(in2, LOW);
-    };
+    // void backward(float vel)
+    // {
+    //     int pwm = velocity(vel);
+    //     analogWrite(en, pwm);
+    //
+    // };
 
     void stop()
     {

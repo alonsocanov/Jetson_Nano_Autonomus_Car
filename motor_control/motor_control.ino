@@ -16,7 +16,6 @@ String test;
 
 int ind1;
 float val_1;
-char av = 'a';
 
 Motor motor_l = Motor(enA, inA1, inA2);
 Motor motor_r = Motor(enB, inB1, inB2);
@@ -35,7 +34,6 @@ void loop()
 {
     if (Serial.available())
     {
-<<<<<<< Updated upstream
 
         data = Serial.readStringUntil('\n');
         Serial.print("Arduino: ");
@@ -46,12 +44,9 @@ void loop()
         test = data.substring(0, ind1);
         val_1 = test.toFloat();
 
-        if (val_1 == 10.0)
-        {
-            motor_l.forward(100);
-            motor_r.forward(100);
-            delay(900)
-        }
+        motor_l.move(val_1);
+        motor_r.move(val_1);
+        delay(900);
     }
     else
     {

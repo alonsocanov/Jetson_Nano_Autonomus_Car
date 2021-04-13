@@ -32,19 +32,3 @@ class Communication:
     @property
     def buffer(self):
         return self.__buff
-
-
-def main():
-    port = '/dev/tty.usbmodem1433401'
-    baudrate = 9600
-    timeout = 3
-    arduino = Communication(port)
-    data = "10,20,30,40"
-    arduino.send(data)
-    while not arduino.buffer:
-        arduino.receive()
-        if arduino.buffer:
-            print(arduino.buffer)
-
-
-main()
