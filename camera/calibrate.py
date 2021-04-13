@@ -233,3 +233,82 @@ def undisort_fish_eye(img: np.array, mtx: np.array, new_mtx: np.array, dist: np.
     undisorted_img = cv2.remap(
         img, mapx, mapy, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
     return undisorted_img
+
+
+# stereo calibrate for stereo images
+# cv2.stereoCalibrate(objectPoints, imagePoints1, imagePoints2, imageSize[, cameraMatrix1
+# NOT FINISHED
+def stero_calibrate(imgs, num_rows: int = 9, num_cols: int = 6, dimension: int = 30, show_img: bool = False):
+    mtx, new_mtx, dist, roi = None, None, None, None
+    flag_img = False
+    # chessboard grid
+    grid = (num_cols, num_rows)
+    # filter size
+    filt = (5, 5)
+    # prepare object points
+    objp = np.zeros((1, num_cols * num_rows, 3), np.float32)
+    objp[0, :, :2] = np.mgrid[0:num_cols, 0:num_rows].T.reshape(-1, 2)
+    # Arrays to store object points and image points from all the images.
+    # 3d point in real world space
+    obj_pts = []
+    # 2d points in image plane.
+    img_pts = []
+    # number of imges
+    print('Provided images: ', len(imgs))
+    if len(imgs) < 9:
+        print('Not enough images, at least 9 images must be given')
+        sys.exit()
+
+    for image in imgs:
+        # termination criteria
+        criteria = (cv2.TERM_CRITERIA_EPS +
+                    cv2.TERM_CRITERIA_MAX_ITER, dimension, .1)
+        # Read Image
+        img = cv2.imread(image)
+        # convert to gray scale
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        # Find the chess board corners
+        ret, corners = cv2.findChessboardCorners(
+            gray, grid, cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FAST_CHECK + cv2.CALIB_CB_NORMALIZE_IMAGE)
+        # If found, add object points, image points (after refining them)
+        if ret:
+            obj_pts.append(objp)
+            corners2 = cv2.cornerSubPix(
+                gray, corners, filt, (-1, -1), criteria)
+            img_pts.append(corners2)
+            # Draw and display the corners
+            if show_img:
+                img = cv2.drawChessboardCorners(img, grid, corners2, ret)
+                cv2.imshow('img', img)
+                cv2.waitKey(500)
+        else:
+            pass
+
+    cv2.destroyAllWindows()
+
+    print('Useful images: ', len(obj_pts))
+    print('Image dimensions: ', img.shape)
+
+    h, w = img.shape[:2]
+    num_obj_pts = len(obj_pts)
+
+    if num_obj_pts > 1:
+        flag_img = True
+        ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(
+            obj_pts, img_pts, (w, h), None, None)
+        new_mtx, roi = cv2.getOptimalNewCameraMatrix(
+            mtx, dist, (w, h), 1, (w, h))
+
+    else:
+        print('Not enough images')
+        mtx, new_mtx = np.eye(3), np.eye(3)
+        dist = np.zeros((1, 4))
+        roi = (0, 0, w, h)
+
+    # Distortion Error
+    if flag_img:
+        distortion_error = distortion_mean(
+            obj_pts, img_pts, rvecs, tvecs, mtx, dist)
+        print('Total distortion error: ', distortion_error)
+        # save resuts in a .txt file
+        return mtx, new_mtx, dist, np.asarray(roi)

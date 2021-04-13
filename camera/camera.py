@@ -98,7 +98,9 @@ def captureVideo(pipeline, api=None, fps=24, path: str = '', show_frame: bool = 
     cv2.destroyAllWindows()
 
 
-def captureImage(pipeline, api=None, num_img: int = 1, fps: int = 1, save_dir='', img_name='img', file_type='.jpg', show_img=True):
+def captureImage(pipeline, api=None, num_img: int = 1, fps: int = 1, save_dir='', img_name: str = 'img', file_type: str = '.jpg', show_img: bool = True):
+    flag_stetero = isinstance(pipeline, tuple) or isinstance(pipeline, list)
+    flag_mono = isinstance(pipeline, str) or isinstance(pipeline, int)
     if not api:
         webcam = cv2.VideoCapture(pipeline)
     else:
@@ -126,4 +128,42 @@ def captureImage(pipeline, api=None, num_img: int = 1, fps: int = 1, save_dir=''
             print("Interrupted")
             break
     webcam.release()
+    cv2.destroyAllWindows()
+
+
+def stereoCapture(pipeline, api=None, num_img: int = 1, fps: int = 1, save_dir='', img_name='img', file_type='.jpg', show_img=True):
+    if not api:
+        webcam_1 = cv2.VideoCapture(pipeline[0])
+        webcam_2 = cv2.VideoCapture(pipeline[1])
+    else:
+        webcam_1 = cv2.VideoCapture(pipeline[0], api)
+        webcam_2 = cv2.VideoCapture(pipeline[1], api)
+    check_webcam_avalability(webcam_1)
+    check_webcam_avalability(webcam_2)
+    if show_img:
+        time.sleep(fps)
+    for i in range(num_img):
+        try:
+            ret_1, frame_1 = webcam_1.read()
+            ret_2, frame_2 = webcam_2.read()
+            if not ret_1 or not ret_2:
+                message = 'Unable to get image'
+                sys_exit(message)
+
+            if save_dir:
+                image_name = ''.join([img_name, '_', str(i), file_type])
+                path_1 = '/'.join([save_dir[0], image_name])
+                path_2 = '/'.join([save_dir[1], image_name])
+                cv2.imwrite(filename=path_1, img=frame)
+                cv2.imwrite(filename=path_2, img=frame)
+            if show_img:
+                cv2.imshow("Captured Image", frame_1)
+                cv2.waitKey(int(fps * 1000))
+            if check_key():
+                break
+        except KeyboardInterrupt:
+            print("Interrupted")
+            break
+    webcam_1.release()
+    webcam_2.release()
     cv2.destroyAllWindows()

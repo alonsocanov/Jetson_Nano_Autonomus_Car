@@ -43,10 +43,18 @@ def main():
     img_left = cv2.cvtColor(cv2.imread(images[0]), cv2.COLOR_RGB2BGR)
     img_right = cv2.cvtColor(cv2.imread(images[1]), cv2.COLOR_RGB2BGR)
 
-    if ars.show_plts == 'True':
+    if args.show_plt == 'True':
         # Large plot of the left image
         plt.figure(figsize=(10, 10), dpi=100)
         plt.imshow(img_left)
+        plt.show()
+
+    disp_left = stereo.compute_left_disparity_map(img_left, img_right)
+
+    if args.show_plt == 'True':
+        # Show the left disparity map
+        plt.figure(figsize=(10, 10))
+        plt.imshow(disp_left)
         plt.show()
 
     # Read the calibration
@@ -54,13 +62,6 @@ def main():
 
     # print("p_left \n", p_left)
     # print("\np_right \n", p_right)
-
-    # disp_left = stereo.compute_left_disparity_map(img_left, img_right)
-
-    # # Show the left disparity map
-    # plt.figure(figsize=(10, 10))
-    # plt.imshow(disp_left)
-    # plt.show()
 
     # # Decompose each matrix
     # k_left, r_left, t_left = stereo.decompose_projection_matrix(p_left)
@@ -74,7 +75,7 @@ def main():
     # print("\nr_right \n", r_right)
     # print("\nt_right \n", t_right)
 
-    # # Get the depth map by calling the above function
+    # Get the depth map by calling the above function
     # depth_map_left = stereo.calc_depth_map(disp_left, k_left, t_left, t_right)
 
     # # Display the depth map
