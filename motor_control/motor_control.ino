@@ -35,6 +35,7 @@ void loop()
 {
     if (Serial.available())
     {
+<<<<<<< Updated upstream
 
         data = Serial.readStringUntil('\n');
         Serial.print("Arduino: ");
@@ -57,8 +58,6 @@ void loop()
         motor_l.stop();
         motor_r.stop();
     }
-
-    //
 
     // motor_l.backward(100);
     // motor_r.backward(100);
