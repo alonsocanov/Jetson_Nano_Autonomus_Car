@@ -8,5 +8,10 @@
         "right": "nvarguscamerasrc sensor-id=1 ! video/x-raw(memory:NVMM), width=(int)1280, height=(int)720, format=(string)NV12, framerate=(fraction)29/1 ! nvvidconv flip-method=2 ! video/x-raw, width=(int)1280, height=(int)720, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink",
         "apiPreference": "cv2.CAP_GSTREAMER",
         "apiEnum": 1800
+    },
+    "arduino":{
+        "port": "/dev/tty.usbmodem1433401",
+        "baudrate": 9600,
+        "timeout":3
     }
 }
