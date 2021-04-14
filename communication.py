@@ -15,7 +15,7 @@ class Communication:
             data = str(data)
         rtxt = ''.join([data, '\n'])
         self.__ser.write(str.encode(rtxt))
-        print("jetson: Message sent")
+        print("Message sent")
 
     def receive(self):
         if self.__ser.inWaiting() > 0:
@@ -32,3 +32,6 @@ class Communication:
     @property
     def buffer(self):
         return self.__buff
+
+    def set_buffer(self, val):
+        self.__buff = val
