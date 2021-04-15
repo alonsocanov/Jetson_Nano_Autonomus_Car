@@ -44,24 +44,8 @@ class TestModules(unittest.TestCase):
         key_q = False
         t = time.time()
         while not key_q:
-            data = None
-            key_q = keyboard.get_key('q')
-            if keyboard.get_multiple_keys(['RIGHT', 'UP']):
-                data = '1,20,100'
-            elif keyboard.get_multiple_keys(['LEFT', 'UP']):
-                data = '1,-20,100'
-            elif keyboard.get_multiple_keys(['LEFT', 'DOWN']):
-                data = '-1,-20,100'
-            elif keyboard.get_multiple_keys(['RIGHT', 'DOWN']):
-                data = '-1,20,100'
-            elif keyboard.get_key('UP'):
-                data = '1,0,100'
-            elif keyboard.get_key('DOWN'):
-                data = '-1,0,100'
-            elif keyboard.get_key('RIGHT'):
-                data = '1,90,100'
-            elif keyboard.get_key('LEFT'):
-                data = '1,-90,100'
+            key_q = keyboard.key_q()
+            data = keyboard.arrow_control()
 
             if data:
                 t = time.time()

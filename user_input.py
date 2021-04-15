@@ -25,8 +25,31 @@ class Keyboard:
                 num_pressed += 1
         if len(key_names) == num_pressed:
             key_pressed = True
-
         return key_pressed
+
+    def arrow_control(self):
+        data = None
+        if self.get_multiple_keys(['RIGHT', 'UP']):
+            data = '1,20,100'
+        elif self.get_multiple_keys(['LEFT', 'UP']):
+            data = '1,-20,100'
+        elif self.get_multiple_keys(['LEFT', 'DOWN']):
+            data = '-1,-20,100'
+        elif self.get_multiple_keys(['RIGHT', 'DOWN']):
+            data = '-1,20,100'
+        elif self.get_key('UP'):
+            data = '1,0,100'
+        elif self.get_key('DOWN'):
+            data = '-1,0,100'
+        elif self.get_key('RIGHT'):
+            data = '1,90,100'
+        elif self.get_key('LEFT'):
+            data = '1,-90,100'
+        return data
+
+    def key_q(self):
+
+        return self.get_key('q')
 
     def user_input(self):
         val = input("Enter your value: ")
