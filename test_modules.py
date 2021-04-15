@@ -2,12 +2,12 @@ import unittest
 import time
 
 from communication import Communication
-from motor_control import user_input, get_key, initInpuWindow
+from user_input import Keyboard
 
 
 class TestModules(unittest.TestCase):
 
-    # def test_motor_user_input(self):
+    # def test_serial_communication(self):
     #     port = '/dev/tty.usbmodem1433401'
     #     baudrate = 9600
     #     timeout = 3
@@ -19,6 +19,7 @@ class TestModules(unittest.TestCase):
     #             arduino.receive()
     #             if arduino.buffer:
     #                 print(arduino.buffer)
+    #         arduino.set_buffer(None)
 
     # def test_key_input(self):
     #     initInpuWindow()
@@ -39,18 +40,34 @@ class TestModules(unittest.TestCase):
         baudrate = 9600
         timeout = 3
         arduino = Communication(port, baudrate, timeout)
-        initInpuWindow()
+        keyboard = Keyboard()
         key_q = False
-
+        t = time.time()
         while not key_q:
             data = None
-            key_q = get_key('q')
-            if get_key('UP'):
+            key_q = keyboard.get_key('q')
+            if keyboard.get_multiple_keys(['RIGHT', 'UP']):
+                data = '1,20,100'
+            elif keyboard.get_multiple_keys(['LEFT', 'UP']):
+                data = '1,-20,100'
+            elif keyboard.get_multiple_keys(['LEFT', 'DOWN']):
+                data = '-1,-20,100'
+            elif keyboard.get_multiple_keys(['RIGHT', 'DOWN']):
+                data = '-1,20,100'
+            elif keyboard.get_key('UP'):
                 data = '1,0,100'
-                arduino.send(data)
-            elif get_key('DOWN'):
+            elif keyboard.get_key('DOWN'):
                 data = '-1,0,100'
+            elif keyboard.get_key('RIGHT'):
+                data = '1,90,100'
+            elif keyboard.get_key('LEFT'):
+                data = '1,-90,100'
+
+            if data:
+                t = time.time()
                 arduino.send(data)
+            if time.time() - t > 20:
+                key_q = True
 
             while not arduino.buffer and data:
                 arduino.receive()

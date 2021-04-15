@@ -8,20 +8,21 @@ class Motor
     byte in2;
 
 private:
-    int velocity(float value, float lim_max = 1, float lim_min = -1)
+    int velocity(float value, float lim_max = 100.0, float lim_min = 0.0)
     {
-        if (value > lim_max)
+        float abs_val = abs(value);
+        if (abs_val > lim_max)
         {
-            value = lim_max;
+            abs_val = lim_max;
         }
-        else if (value < lim_min)
+        else if (abs_val < lim_min)
         {
-            value = lim_min;
+            abs_val = lim_min;
         }
 
-        // Map the potentiometer value from 0 to 255 from percentaje o to 100
-        int pwmOutput = map(abs(value), 0, 1, 0, 255);
-        return pwmOutput;
+        // Map the potentiometer value from 0 to 255 from 0 to 100
+        int pwm = map(abs_val, 0, 100, 0, 255);
+        return pwm;
     };
 
 public:

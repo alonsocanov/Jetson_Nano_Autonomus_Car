@@ -15,7 +15,7 @@
 String data;
 
 int ind1, ind2, ind3;
-float speed, angle, time;
+float speed, angle, y, x, time;
 String speed_str, angle_str, time_str;
 
 Motor motor_l = Motor(enA, inA1, inA2);
@@ -45,14 +45,29 @@ void loop()
         angle_str = data.substring(ind1 + 1, ind2);
         time_str = data.substring(ind2 + 1, data.length());
 
-        speed = check_negative(speed_str);
+        speed = check_negative(speed_str) * 100.0;
         angle = check_negative(angle_str);
         time = check_negative(time_str);
 
-        motor_l.move(speed);
-        motor_r.move(speed);
-        delay(time);
+        if (angle > 0)
+        {
+            y = y_speed(deg_to_rad(angle)) * speed;
+            motor_l.move(speed);
+            motor_r.move(y);
+        }
+        else if (angle)
+        {
+            y = y_speed(deg_to_rad(angle)) * speed;
+            motor_l.move(y);
+            motor_r.move(speed);
+        }
+        else
+        {
+            motor_l.move(speed);
+            motor_r.move(speed);
+        }
 
+        delay(time);
         Serial.println(data);
     }
     else
