@@ -3,13 +3,13 @@
 #include "utils.hpp"
 
 // left motor
-#define enA 9
-#define inA1 6
-#define inA2 7
+#define enA 10
+#define inA1 7
+#define inA2 8
 
 // right motor
-#define enB 10
-#define inB1 11
+#define enB 11
+#define inB1 13
 #define inB2 12
 
 String data;
