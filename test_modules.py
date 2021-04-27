@@ -65,27 +65,26 @@ class TestModules(unittest.TestCase):
         timeout = 3
         arduino = Communication(port, baudrate, timeout)
         joystick = Joystick()
-        while True:
-            print(joystick.getJS())
-            time.sleep(0.05)
+        key_q = False
+        t = time.time()
+        while not key_q:
+            key_q = joystick.getJS('R2')
+            data_1 = joystick.getJS('axis2') * 45
+            data_2 = joystick.getJS('axis1')
+            data_3 = '100'
+            data = ','.join([str(data_1), str(data_2), data_3])
 
-        # key_q = False
-        # t = time.time()
-        # while not key_q:
-        #     key_q = keyboard.key_q()
-        #     data = keyboard.arrow_control()
+            if data:
+                t = time.time()
+                arduino.send(data)
+            if time.time() - t > 20:
+                key_q = True
 
-        #     if data:
-        #         t = time.time()
-        #         arduino.send(data)
-        #     if time.time() - t > 20:
-        #         key_q = True
-
-        #     while not arduino.buffer and data:
-        #         arduino.receive()
-        #         if arduino.buffer:
-        #             print(arduino.buffer)
-        #     arduino.set_buffer(None)
+            while not arduino.buffer and data:
+                arduino.receive()
+                if arduino.buffer:
+                    print(arduino.buffer)
+            arduino.set_buffer(None)
 
 
 if __name__ == '__main__':

@@ -1,11 +1,17 @@
 import serial
 import time
+import sys
 
 
 class Communication:
     def __init__(self, port, baudrate=9600, timeout=.1):
-        self.__ser = serial.Serial(port=port,
-                                   baudrate=baudrate, timeout=timeout)
+        try:
+            self.__ser = serial.Serial(port=port,
+                                       baudrate=baudrate, timeout=timeout)
+        except serial.serialutil.SerialException as error:
+            print('Port non existant:', port)
+            print(error)
+            sys.exit(1)
         # self.__ser.write(str.encode('Connexion with arduino \n'))
         self.__buff = None
         time.sleep(2)

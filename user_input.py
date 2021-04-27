@@ -87,7 +87,7 @@ class Joystick:
             elif event.type == pygame.JOYBUTTONUP:
                 for x, (key, val) in enumerate(self.button.items()):
                     if x < 10:
-                        if self.controller.get_button(x):
+                        if event.button == x:
                             self.button[key] = 0
 
         self.button['axis1'] = self.axiss[0]
