@@ -3,9 +3,9 @@
 #include "utils.hpp"
 
 // left motor
-#define enA 10
-#define inA1 7
-#define inA2 8
+#define enA 11
+#define inA1 12
+#define inA2 13
 
 // right motor
 #define enB 11

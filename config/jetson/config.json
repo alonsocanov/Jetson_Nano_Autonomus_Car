@@ -10,7 +10,7 @@
         "apiEnum": 1800
     },
     "arduino":{
-        "port": "/dev/tty.usbmodem1433401",
+        "port": "/dev/ttyACM0",
         "baudrate": 9600,
         "timeout":3
     }
