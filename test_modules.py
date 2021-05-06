@@ -28,6 +28,7 @@ class TestModules(unittest.TestCase):
     #         key_q = get_key('q')
     #         if get_key('LEFT'):
     #             print('LEFT')
+
     #         if get_key('RIGHT'):
     #             print('RIGHT')
     #         if get_key('UP'):
