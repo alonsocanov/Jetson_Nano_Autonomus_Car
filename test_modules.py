@@ -62,6 +62,7 @@ class TestModules(unittest.TestCase):
 
     def test_motor_control_joysick(self):
         port = '/dev/tty.usbmodem1433401'
+        port = '/dev/ttyACM0'
         baudrate = 9600
         timeout = 3
         arduino = Communication(port, baudrate, timeout)
